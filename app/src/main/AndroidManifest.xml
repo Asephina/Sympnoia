@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 运动计步：读取系统计步传感器（Android 10+ 需要「身体活动」权限） -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <!-- 后台常驻计步的前台服务（Android 14+ 需声明 health 类型权限） -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
+    <!-- 番茄时钟前台服务（Android 14+ 的 specialUse 类型：倒计时属于自用特殊用途） -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- 开机后自动恢复计步 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 番茄时钟：倒计时结束的震动提示 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 凌薇 AI（底栏第三栏「对话」）：调用使用者自己填的 OpenAI 兼容接口。
+         这是全应用唯一的联网用途；不打开那一栏就不会发出任何网络请求。 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.sensor.stepcounter"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Asephina">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Asephina"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 常驻计步服务：监听系统计步传感器，把步数写进当天的日期文件 -->
+        <service
+            android:name=".StepService"
+            android:exported="false"
+            android:foregroundServiceType="health" />
+
+        <!-- 番茄时钟：关掉软件 / 从后台划掉也继续计时；
+             通知栏显示剩余时间，并带「暂停 / 继续 / 完成 / 放弃」四个操作 -->
+        <service
+            android:name=".PomoService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="pomodoro countdown keeps running while the app is closed" />
+        </service>
+
+        <!-- 兜底：前台服务被系统清掉时，用系统定时任务每 15 分钟采一次计步值 -->
+        <service
+            android:name=".StepJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- 开机 / 应用更新后自动恢复计步（仅当用户开启过自动记录） -->
+        <receiver
+            android:name=".StepBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

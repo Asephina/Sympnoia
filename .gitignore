@@ -1,0 +1,27 @@
+*.iml
+.gradle
+.kotlin
+/build
+/app/release
+/captures
+.externalNativeBuild
+.cxx
+
+# 签名与密钥：绝不进仓库
+# 一旦泄露，别人就能签出跟你同名的包；密码也在这里面
+keystore.properties
+*.jks
+*.keystore
+
+# 构建产物 / 安装包（体积大，且每次都能重新生成）
+*.apk
+*.aab
+*.idsig
+
+# 本地配置（各人机器上的 SDK 路径）
+/local.properties
+local.properties
+
+# IDE 本地状态
+/.idea
+.DS_Store

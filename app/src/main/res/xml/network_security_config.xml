@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  「对话」一栏需要联网，这份配置控制其中「明文 http」的放行范围。
+
+  为什么默认放行明文：
+    很多人会把接口指向局域网里的本地模型（Ollama / LM Studio / llama.cpp server），
+    它们默认都是 http://192.168.x.x:xxxx，不放行就永远连不上。
+
+  ⚠️ 安全提醒：
+    · 用 http 时，你填的 API Key 与聊天内容是**明文**在网线上跑的，
+      只在「自己的电脑/自己的局域网」里可以接受。
+    · 如果只使用云端 https 接口（DeepSeek / 通义 / Kimi / 智谱……），
+      把下面的 cleartextTrafficPermitted 改成 false 更安全 —— 改完就只有 https 能连。
+    · 应用内填 http:// 地址时会显示一条提醒。
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

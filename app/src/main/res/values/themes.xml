@@ -1,0 +1,8 @@
+<resources>
+    <!-- 界面完全由 Compose 自己绘制（沉浸式），不要系统 ActionBar。
+         用 NoActionBar 主题还能避免 AppCompat 隐藏标题栏时触发重新布局 —— 
+         那正是「首帧状态栏高度为 0、切后台回来才正常」的根源。 -->
+    <style name="Theme.Asephina" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+</resources>

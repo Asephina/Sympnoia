@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 界面配色都写在 MainActivity.kt 里（Compose 的 Colors），这里不需要额外的颜色资源 -->
+</resources>
