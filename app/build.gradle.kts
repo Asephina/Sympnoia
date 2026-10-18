@@ -20,8 +20,8 @@ android {
         applicationId = "com.example.asephina"
         minSdk = 24
         targetSdk = 37
-        versionCode = 70
-        versionName = "1.12.1"
+        versionCode = 71
+        versionName = "1.12.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

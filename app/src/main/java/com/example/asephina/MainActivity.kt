@@ -2569,6 +2569,16 @@ object WordExport {
             body.append("<w:p><w:r><w:br w:type=\"page\"/></w:r></w:p>")
         }
 
+        /**
+         * 一条水平分隔线。
+         * 日子之间用它代替分页：某天只抽了奖、没记两笔时，分页会把后面挤出一整页空白。
+         */
+        fun rule() {
+            body.append("<w:p><w:pPr>")
+            body.append("<w:pBdr><w:bottom w:val=\"single\" w:sz=\"10\" w:space=\"1\" w:color=\"B9B2E0\"/></w:pBdr>")
+            body.append("<w:spacing w:before=\"220\" w:after=\"80\"/></w:pPr></w:p>")
+        }
+
         fun image(file: File) {
             val bytes = try {
                 file.readBytes()
@@ -2844,8 +2854,8 @@ object WordExport {
             d.p("（暂无记录）")
         }
         days.forEachIndexed { dayIndex, day ->
-            // 每天之间分页，但「二、每日记录」这个标题下面紧接着就是第一天的数据
-            if (dayIndex > 0) d.pageBreak()
+            // 日子之间画一条线，不分页：只抽了奖、没记两笔的那天不会再把后面挤出一整页空白
+            if (dayIndex > 0) d.rule()
             val lw = Dates.lingweiDayName(day)
             val g = idx.game(day)
             val tags = Dates.tagsOf(day)
@@ -13909,6 +13919,7 @@ Key 只写在本机，【不进任何导出文件】—— 那些文件都写在
 private const val MANUAL_LOG = """
 # 开发日志
 
+2026-10-18　版本 1.12.2（versionCode 71）　导出的 Word 不再每天分页：日子之间改用一条分隔线隔开，某天只抽了奖、没记几笔时不会再多出一整页空白
 2026-10-10　版本 1.12.1（versionCode 70）　修连点顶栏标题进自定义设置时闪退：刮刮乐寄语输入框的行数设得超过了输入框上限
 2026-10-10　版本 1.12.0（versionCode 69）　修各弹窗在浅色主题下底色过深、文字看不清：主动互动弹窗、凌薇日弹窗、AI 会话与设置整页、刮刮乐涂层都改随主题；刮刮乐各奖项寄语改到自定义设置里逐条可改；AI 两张内置人设卡加「藏」，设置里可隐藏、让自建卡排到最前
 2026-10-09　版本 1.11.8（versionCode 68）　熵记几个操作按钮恢复整行宽度（不再缩成贴字胶囊）：仍然浮在列表之上、底色实心，只是行内留白那一点是透明的
